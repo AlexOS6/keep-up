@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { PoseService } from '../../services/pose-service';
+import { GestureDetectService } from '../../services/gesture-detect-service';
 
 @Component({
   selector: 'app-game',
@@ -9,6 +10,7 @@ import { PoseService } from '../../services/pose-service';
 export class GameComponent implements AfterViewInit {
 
   private poseService = inject(PoseService);
+  private gestureDetectService = inject(GestureDetectService);
 
   @ViewChild('video')
   video!: ElementRef<HTMLVideoElement>;
@@ -48,12 +50,10 @@ export class GameComponent implements AfterViewInit {
     const landmarks = result?.landmarks[0];
 
     if (landmarks) {
-      const leftShoulder = landmarks[11];
-      const leftWrist = landmarks[15];
+      const gesture =
+      this.gestureDetectService.detectGesture(landmarks);
 
-      const leftHandUp = leftWrist.y < leftShoulder.y;
-
-      console.log('Left hand up:', leftHandUp)
+      console.log('Detected Gesture:', gesture);
     }
 
     requestAnimationFrame(() => this.detectPose());

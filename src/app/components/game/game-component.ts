@@ -32,13 +32,30 @@ export class GameComponent implements AfterViewInit {
 
     await videoElement.play();
     await this.poseService.loadMediaPipe();
-    const result = this.poseService.detect(videoElement);
-    console.log(result);
+    this.detectPose();
   }
 
   startGame() {
     this.score;
     this.timeRemaining;
     this.currentCommand;
+  }
+
+  private detectPose() {
+    const videoElement = this.video.nativeElement;
+    const result = this.poseService.detect(videoElement);
+
+    const landmarks = result?.landmarks[0];
+
+    if (landmarks) {
+      const leftShoulder = landmarks[11];
+      const leftWrist = landmarks[15];
+
+      const leftHandUp = leftWrist.y < leftShoulder.y;
+
+      console.log('Left hand up:', leftHandUp)
+    }
+
+    requestAnimationFrame(() => this.detectPose());
   }
 }

@@ -9,7 +9,6 @@ export class PoseService {
   private poseLandmarker?: PoseLandmarker;
 
   async loadMediaPipe() {
-
     const vision = await FilesetResolver.forVisionTasks(
       'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
     );

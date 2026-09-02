@@ -2,18 +2,18 @@
     <h1>Keep Up</h1>
 
     <div class="score-bar">
-        <p>Score: {{ score }}</p>
-        <p>Time: {{ timeRemaining }}</p>
+        <p>Score: {{ score() }}</p>
+        <p>Time: {{ timeRemaining() }}</p>
     </div>
 
     <div class="command-box">
-        <h2>{{ currentCommand }}</h2>
+        <h2>{{ currentCommand() }}</h2>
     </div>
 
     <div class="camera-wrapper">
         <video #video playsinline></video>
     </div>
 
-    <p class="detected">Detected: {{ detectedGesture }}</p>
-    <button (click)="startGame()"></button>
+    <p class="detected">Detected: {{ detectedGesture() }}</p>
+    <button (click)="startGame()">Start</button>
 </div>

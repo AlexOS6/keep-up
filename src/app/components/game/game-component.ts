@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { PoseService } from '../../services/pose-service';
 import { GestureDetectService } from '../../services/gesture-detect-service';
+import { GameService } from '../../services/game-service';
+import { Gesture } from '../../models/gesture';
 
 @Component({
   selector: 'app-game',
@@ -11,14 +13,16 @@ export class GameComponent implements AfterViewInit {
 
   private poseService = inject(PoseService);
   private gestureDetectService = inject(GestureDetectService);
+  private gameService = inject(GameService);
 
   @ViewChild('video')
   video!: ElementRef<HTMLVideoElement>;
 
-  score = 0;
-  timeRemaining = 3;
-  currentCommand = "Raise both hands";
-  detectedGesture = 'NONE';
+  score = signal(0);
+  timeRemaining = signal(3);
+  currentCommand = signal(Gesture.NONE);
+  detectedGesture = signal(Gesture.NONE);
+  isGameRunning = signal(false);
 
   async ngAfterViewInit() {
     const stream = await navigator.mediaDevices.getUserMedia({video: true});
@@ -38,9 +42,9 @@ export class GameComponent implements AfterViewInit {
   }
 
   startGame() {
-    this.score;
-    this.timeRemaining;
-    this.currentCommand;
+    this.score.set(0);
+    this.isGameRunning.set(true);
+    this.currentCommand.set(this.gameService.getRandomCommand());
   }
 
   private detectPose() {
@@ -50,10 +54,14 @@ export class GameComponent implements AfterViewInit {
     const landmarks = result?.landmarks[0];
 
     if (landmarks) {
-      const gesture =
-      this.gestureDetectService.detectGesture(landmarks);
+      this.detectedGesture.set(this.gestureDetectService.detectGesture(landmarks));
 
-      console.log('Detected Gesture:', gesture);
+      if (
+        this.isGameRunning() && this.detectedGesture() === this.currentCommand()) {
+          this.score.update(score => score +1);
+          this.currentCommand.set(this.gameService.getRandomCommand());
+
+      }
     }
 
     requestAnimationFrame(() => this.detectPose());

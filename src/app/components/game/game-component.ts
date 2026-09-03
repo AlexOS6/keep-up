@@ -3,6 +3,7 @@ import { PoseService } from '../../services/pose-service';
 import { GestureDetectService } from '../../services/gesture-detect-service';
 import { GameService } from '../../services/game-service';
 import { Gesture } from '../../models/gesture';
+import { GameState } from '../../models/game-state';
 
 @Component({
   selector: 'app-game',
@@ -22,7 +23,9 @@ export class GameComponent implements AfterViewInit {
   timeRemaining = signal(3);
   currentCommand = signal(Gesture.NONE);
   detectedGesture = signal(Gesture.NONE);
-  isGameRunning = signal(false);
+
+  readonly GameState = GameState;
+  gameState = signal(GameState.IDLE);
 
   async ngAfterViewInit() {
     const stream = await navigator.mediaDevices.getUserMedia({video: true});
@@ -44,9 +47,16 @@ export class GameComponent implements AfterViewInit {
   startGame() {
     this.score.set(0);
     this.timeRemaining.set(3);
-    this.isGameRunning.set(true);
+    this.gameState.set(GameState.PLAYING);
     this.currentCommand.set(this.gameService.getRandomCommand());
     this.startTimer();
+  }
+
+  resetGame() {
+    this.score.set(0);
+    this.timeRemaining.set(3);
+    this.currentCommand.set(Gesture.NONE);
+    this.gameState.set(GameState.IDLE);
   }
 
   private detectPose() {
@@ -72,13 +82,13 @@ export class GameComponent implements AfterViewInit {
       this.score.update(score => score + 1);
 
       this.currentCommand.set(
-        this.gameService.getRandomCommand()
+        this.gameService.getRandomCommand(this.currentCommand())
       );
 
       this.timeRemaining.set(3);
       this.startTimer();
     } else {
-      this.isGameRunning.set(false);
+      this.gameState.set(GameState.GAME_OVER);
     }
   }
 

@@ -12,12 +12,16 @@ export class GameService {
     Gesture.BOTH_HANDS_UP
   ];
 
-  getRandomCommand() {
+  getRandomCommand(currentCommand?: Gesture) {
+    const availableCommands = this.commands.filter(
+    command => command !== currentCommand
+  );
+
     const randomIndex = Math.floor(
-      Math.random() * this.commands.length
+      Math.random() * availableCommands.length
     );
 
-    return this.commands[randomIndex];
+    return availableCommands[randomIndex];
   }
 
   evaluateRound(command: Gesture, detectedGesture: Gesture) {

@@ -1,19 +1,32 @@
 <div class="game-container">
     <h1>Keep Up</h1>
 
-    <div class="score-bar">
-        <p>Score: {{ score() }}</p>
-        <p>Time: {{ timeRemaining() }}</p>
-    </div>
-
-    <div class="command-box">
-        <h2>{{ currentCommand() }}</h2>
-    </div>
-
+    @if (gameState() !== GameState.GAME_OVER) {
+        <div class="score-bar">
+            <p>Score: {{ score() }}</p>
+            <p>Time: {{ timeRemaining() }}</p>
+        </div>
+        <div class="command-box">
+            <h2>{{ currentCommand() }}</h2>
+        </div>
+    }
+    
     <div class="camera-wrapper">
         <video #video playsinline></video>
     </div>
 
-    <p class="detected">Detected: {{ detectedGesture() }}</p>
-    <button (click)="startGame()">Start</button>
+    @if (gameState() === GameState.GAME_OVER) {
+        <div class="game-over">
+            <h2>Game Over</h2>
+            <p>Score: {{ score() }}</p>
+            <button (click)="resetGame()">Play Again</button>
+        </div>
+    } @else {
+        <p class="detected">Detected: {{ detectedGesture() }}</p>
+        <button 
+    (click)="startGame()"
+    [disabled]="gameState() === GameState.PLAYING">
+    Start Game
+    </button>
+    }
 </div>

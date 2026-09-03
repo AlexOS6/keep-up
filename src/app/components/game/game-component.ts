@@ -43,8 +43,10 @@ export class GameComponent implements AfterViewInit {
 
   startGame() {
     this.score.set(0);
+    this.timeRemaining.set(3);
     this.isGameRunning.set(true);
     this.currentCommand.set(this.gameService.getRandomCommand());
+    this.startTimer();
   }
 
   private detectPose() {
@@ -55,15 +57,40 @@ export class GameComponent implements AfterViewInit {
 
     if (landmarks) {
       this.detectedGesture.set(this.gestureDetectService.detectGesture(landmarks));
-
-      if (
-        this.isGameRunning() && this.detectedGesture() === this.currentCommand()) {
-          this.score.update(score => score +1);
-          this.currentCommand.set(this.gameService.getRandomCommand());
-
-      }
     }
 
     requestAnimationFrame(() => this.detectPose());
   }
+
+  private evaluateRound() {
+    const success = this.gameService.evaluateRound(
+      this.currentCommand(),
+      this.detectedGesture()
+    );
+
+    if (success) {
+      this.score.update(score => score + 1);
+
+      this.currentCommand.set(
+        this.gameService.getRandomCommand()
+      );
+
+      this.timeRemaining.set(3);
+      this.startTimer();
+    } else {
+      this.isGameRunning.set(false);
+    }
+  }
+
+  private startTimer() {
+    const timer = setInterval(() => {
+      this.timeRemaining.update(time => time -1);
+
+      if (this.timeRemaining() == 0) {
+        clearInterval(timer);
+        this.evaluateRound();
+      }
+    }, 1000);
+  }
+
 }

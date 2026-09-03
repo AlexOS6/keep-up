@@ -19,4 +19,8 @@ export class GameService {
 
     return this.commands[randomIndex];
   }
+
+  evaluateRound(command: Gesture, detectedGesture: Gesture) {
+    return command === detectedGesture;
+  }
 }

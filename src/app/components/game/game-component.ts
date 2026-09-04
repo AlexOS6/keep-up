@@ -19,12 +19,14 @@ export class GameComponent implements AfterViewInit {
   @ViewChild('video')
   video!: ElementRef<HTMLVideoElement>;
 
+   readonly GameState = GameState;
+
   score = signal(0);
+  roundTime = signal(3);
   timeRemaining = signal(3);
   currentCommand = signal(Gesture.NONE);
   detectedGesture = signal(Gesture.NONE);
 
-  readonly GameState = GameState;
   gameState = signal(GameState.IDLE);
 
   async ngAfterViewInit() {
@@ -46,6 +48,7 @@ export class GameComponent implements AfterViewInit {
 
   startGame() {
     this.score.set(0);
+    this.roundTime.set(3);
     this.timeRemaining.set(3);
     this.gameState.set(GameState.PLAYING);
     this.currentCommand.set(this.gameService.getRandomCommand());
@@ -54,6 +57,7 @@ export class GameComponent implements AfterViewInit {
 
   resetGame() {
     this.score.set(0);
+    this.roundTime.set(3);
     this.timeRemaining.set(3);
     this.currentCommand.set(Gesture.NONE);
     this.gameState.set(GameState.IDLE);
@@ -62,7 +66,6 @@ export class GameComponent implements AfterViewInit {
   private detectPose() {
     const videoElement = this.video.nativeElement;
     const result = this.poseService.detect(videoElement);
-
     const landmarks = result?.landmarks[0];
 
     if (landmarks) {
@@ -85,22 +88,31 @@ export class GameComponent implements AfterViewInit {
         this.gameService.getRandomCommand(this.currentCommand())
       );
 
-      this.timeRemaining.set(3);
+      this.roundTime.update(time => Math.max(0.8, time - 0.1));
+      this.timeRemaining.set(this.roundTime());
       this.startTimer();
     } else {
       this.gameState.set(GameState.GAME_OVER);
     }
   }
-
+  
   private startTimer() {
-    const timer = setInterval(() => {
-      this.timeRemaining.update(time => time -1);
+    const startTime = performance.now();
 
-      if (this.timeRemaining() == 0) {
-        clearInterval(timer);
+    const updateTimer = () => {
+      const elapsedTime = (performance.now() - startTime) / 1000;
+      const remainingTime = this.roundTime() - elapsedTime;
+      
+      if (remainingTime <= 0) {
+        this.timeRemaining.set(0);
         this.evaluateRound();
+        return;
       }
-    }, 1000);
-  }
 
+      this.timeRemaining.set(remainingTime);
+      requestAnimationFrame(updateTimer);
+    };
+
+  requestAnimationFrame(updateTimer);
+  }
 }

@@ -4,7 +4,7 @@
     @if (gameState() !== GameState.GAME_OVER) {
         <div class="score-bar">
             <p>Score: {{ score() }}</p>
-            <p>Time: {{ timeRemaining() }}</p>
+            <p>Time: {{ timeRemaining().toFixed(2) }}</p>
         </div>
         <div class="command-box">
             <h2>{{ currentCommand() }}</h2>

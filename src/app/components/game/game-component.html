@@ -4,6 +4,7 @@
     @if (gameState() !== GameState.GAME_OVER) {
         <div class="score-bar">
             <p>Score: {{ score() }}</p>
+            <p>Lives: {{ lives() }}</p>
             <p>Time: {{ timeRemaining().toFixed(2) }}</p>
         </div>
 
@@ -12,13 +13,27 @@
         </div>
     }
     
-    <div class="camera-wrapper">
+    <div class="camera-wrapper"
+    [class.pop]="feedback() === 'success'"
+    [class.shake]="feedback() === 'failure'">
         <video #video playsinline></video>
 
         @if (gameState() === GameState.COUNTDOWN) {
         <div class="countdown">
             <p>Get Ready!</p>
             <h2>{{ countdown() }}</h2>
+        </div>
+    }
+
+    @if (feedback() === 'success') {
+        <div class="feedback-overlay success">
+            <h2>✓ CORRECT!</h2>
+        </div>
+    }
+
+    @if (feedback() === 'failure') {
+        <div class="feedback-overlay failure">
+            <h2>✗ MISS!</h2>
         </div>
     }
     </div>

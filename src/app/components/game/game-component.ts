@@ -27,6 +27,9 @@ export class GameComponent implements AfterViewInit {
   currentCommand = signal(Gesture.NONE);
   detectedGesture = signal(Gesture.NONE);
   countdown = signal(3);
+  lives = signal(3);
+
+  feedback = signal< 'success' | 'failure' | null>(null);
 
   gameState = signal(GameState.IDLE);
 
@@ -49,6 +52,7 @@ export class GameComponent implements AfterViewInit {
 
   startGame() {
     this.score.set(0);
+    this.lives.set(3);
     this.roundTime.set(3);
     this.timeRemaining.set(3);
     this.countdown.set(3);
@@ -58,6 +62,7 @@ export class GameComponent implements AfterViewInit {
 
   resetGame() {
     this.score.set(0);
+    this.lives.set(3);
     this.roundTime.set(3);
     this.timeRemaining.set(3);
     this.currentCommand.set(Gesture.NONE);
@@ -83,18 +88,26 @@ export class GameComponent implements AfterViewInit {
     );
 
     if (success) {
+      this.feedback.set('success');
       this.score.update(score => score + 1);
 
-      this.currentCommand.set(
-        this.gameService.getRandomCommand(this.currentCommand())
-      );
-
       this.roundTime.update(time => Math.max(0.8, time - 0.1));
-      this.timeRemaining.set(this.roundTime());
-      this.startTimer();
     } else {
-      this.gameState.set(GameState.GAME_OVER);
+      this.feedback.set('failure');
+      this.lives.update(lives => lives - 1);
+      if (this.lives() === 0) { 
+        this.gameState.set(GameState.GAME_OVER);
+        return;
+      }
     }
+
+    this.currentCommand.set(this.gameService.getRandomCommand(this.currentCommand()));
+    this.timeRemaining.set(this.roundTime());
+    this.startTimer();
+
+    setTimeout(() => {
+      this.feedback.set(null);
+    }, 800);
   }
   
   private startTimer() {
@@ -124,7 +137,7 @@ export class GameComponent implements AfterViewInit {
       if (this.countdown() <= 0) {
         clearInterval(countdownTimer);
         this.gameState.set(GameState.PLAYING);
-        this.currentCommand.set(this.gameService.getRandomCommand());
+        this.currentCommand.set(this.gameService.getRandomCommand(this.currentCommand()));
         this.startTimer();
       }
     }, 1000);

@@ -26,6 +26,7 @@ export class GameComponent implements AfterViewInit {
   timeRemaining = signal(3);
   currentCommand = signal(Gesture.NONE);
   detectedGesture = signal(Gesture.NONE);
+  countdown = signal(3);
 
   gameState = signal(GameState.IDLE);
 
@@ -50,9 +51,9 @@ export class GameComponent implements AfterViewInit {
     this.score.set(0);
     this.roundTime.set(3);
     this.timeRemaining.set(3);
-    this.gameState.set(GameState.PLAYING);
-    this.currentCommand.set(this.gameService.getRandomCommand());
-    this.startTimer();
+    this.countdown.set(3);
+    this.gameState.set(GameState.COUNTDOWN);
+    this.startCountdown();
   }
 
   resetGame() {
@@ -114,5 +115,18 @@ export class GameComponent implements AfterViewInit {
     };
 
   requestAnimationFrame(updateTimer);
+  }
+
+  private startCountdown() {
+    const countdownTimer = setInterval(() => {
+      this.countdown.update(count => count - 1);
+
+      if (this.countdown() <= 0) {
+        clearInterval(countdownTimer);
+        this.gameState.set(GameState.PLAYING);
+        this.currentCommand.set(this.gameService.getRandomCommand());
+        this.startTimer();
+      }
+    }, 1000);
   }
 }

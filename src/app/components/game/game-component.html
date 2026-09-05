@@ -36,6 +36,12 @@
             <h2>✗ MISS!</h2>
         </div>
     }
+
+    @if (streak() >= 3 && feedback() === 'success') {
+        <div class="streak">
+            {{ streak() }}x STREAK!
+        </div>
+    }
     </div>
 
     @if (gameState() === GameState.GAME_OVER) {

@@ -28,6 +28,7 @@ export class GameComponent implements AfterViewInit {
   detectedGesture = signal(Gesture.NONE);
   countdown = signal(3);
   lives = signal(3);
+  streak = signal(0);
 
   feedback = signal< 'success' | 'failure' | null>(null);
 
@@ -52,6 +53,7 @@ export class GameComponent implements AfterViewInit {
 
   startGame() {
     this.score.set(0);
+    this.streak.set(0);
     this.lives.set(3);
     this.roundTime.set(3);
     this.timeRemaining.set(3);
@@ -89,11 +91,15 @@ export class GameComponent implements AfterViewInit {
 
     if (success) {
       this.feedback.set('success');
-      this.score.update(score => score + 1);
+      this.streak.update(streak => streak + 1);
+
+      const points = Math.min(this.streak() * 10, 100);
+      this.score.update(score => score + points);
 
       this.roundTime.update(time => Math.max(0.8, time - 0.1));
     } else {
       this.feedback.set('failure');
+      this.streak.set(0);
       this.lives.update(lives => lives - 1);
       if (this.lives() === 0) { 
         this.gameState.set(GameState.GAME_OVER);
@@ -107,7 +113,7 @@ export class GameComponent implements AfterViewInit {
 
     setTimeout(() => {
       this.feedback.set(null);
-    }, 800);
+    }, 700);
   }
   
   private startTimer() {

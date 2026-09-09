@@ -16,20 +16,19 @@
     </div>
 
     <div class="command-box">
-        @if (gameState() === GameState.IDLE) {
-            <H2>PRESS START TO READY UP!</H2>
-        }
-
-        @if (gameState() === GameState.COUNTDOWN) {
-            <h2>Get Ready...</h2>
-        }
-
-        @if (gameState() === GameState.PLAYING) {
-            <h2>{{ currentCommand() }}</h2>
-        }
-
-        @if (gameState() === GameState.GAME_OVER) {
-            <h2>GAME OVER</h2>
+        @switch (gameState()) {
+            @case (GameState.IDLE) {
+                <h2>PRESS START TO READY UP!</h2>
+            }
+            @case (GameState.COUNTDOWN) {
+                <h2>Get Ready...</h2>
+            }
+            @case (GameState.PLAYING) {
+                <h2>{{ currentCommand() }}</h2>
+            }
+            @case (GameState.GAME_OVER) {
+                <h2>GAME OVER</h2>
+            }
         }
     </div>
     
@@ -64,11 +63,19 @@
     }
     </div>
 
-    <p class="detected">Detected: {{ detectedGesture() }}</p>
+    @if (cameraError()) {
+        <p class="camera-error">
+            {{ cameraError() }}
+        </p>
+    } @else {
+        <p class="detected">
+            Detected: {{ detectedGesture() }}
+        </p>
+    }
 
     @if (gameState() === GameState.IDLE) {
         <div class="menu-actions">
-            <button class="start-button" (click)="startGame()">Start Game</button>
+            <button class="start-button" [disabled]="!cameraReady()" (click)="startGame()">Start Game</button>
             <button class="how-to-button" (click)="showInstructions.set(true)">
                 <fa-icon [icon]="faCircleInfo"></fa-icon>
                 How to Play

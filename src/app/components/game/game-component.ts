@@ -38,24 +38,37 @@ export class GameComponent implements AfterViewInit {
   timeRemaining = signal(3);
   countdown = signal(3);
 
+  cameraReady = signal(false);
+  cameraError = signal<string | null>(null);
   feedback = signal<'success' | 'failure' | null>(null);
   showInstructions = signal(false);
 
   async ngAfterViewInit() {
-    const stream = await navigator.mediaDevices.getUserMedia({video: true});
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({video: true});
 
-    const videoElement = this.video.nativeElement;
-    videoElement.srcObject = stream;
+      const videoElement = this.video.nativeElement;
+      videoElement.srcObject = stream;
+      
+      await new Promise<void>((resolve) => {
+        videoElement.onloadedmetadata = () => {
+          resolve();
+        }
+      });
+      
+      await videoElement.play();
+      await this.poseService.loadMediaPipe();
+      this.cameraReady.set(true);
+      this.detectPose();
+    } catch (err) {
+      console.error('Camera setup unsuccessful:', err);
 
-    await new Promise<void>((resolve) => {
-      videoElement.onloadedmetadata = () => {
-        resolve();
-      }
-    });
-
-    await videoElement.play();
-    await this.poseService.loadMediaPipe();
-    this.detectPose();
+      this.cameraReady.set(false);
+      this.cameraError.set(
+        `Camera access is required to play.
+        Please allow camera access and reload the page.`
+      );
+    }
   }
 
   startGame() {

@@ -70,6 +70,7 @@
 .camera-wrapper {
     position: relative;
     width: 100%;
+    aspect-ratio: 4 / 3;
     overflow: hidden;
     border-radius: 12px;
     background: #111;
@@ -213,6 +214,13 @@
     }
 }
 
+.camera-error {
+    font-family: 'Russo One', sans-serif;
+    -webkit-text-stroke: 1px black;
+    text-shadow: 1px 1px 2px black;
+    white-space: pre-line;
+}
+
 .detected {
     margin-top: 2rem;
     font-size: 1rem;
@@ -230,7 +238,6 @@
 }
 
 .start-button {
-    margin-top: 1rem;
     margin-bottom: 1rem;
     padding: 0.75rem 1.5rem;
     font-size: 1.25rem;
@@ -249,8 +256,15 @@
     background-color: #4ade80;
 }
 
+.start-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .how-to-button {
     background: transparent;
+    margin-top: 1rem;
     color: #cbd5e1;
     border: none;
     cursor: pointer;
@@ -274,7 +288,7 @@ button:hover {
 
 .game-over {
     width: 100%;
-    padding: 1.5rem;
+    padding: 1rem;
     border-radius: 12px;
     background: rgba(10, 10, 15, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.2);

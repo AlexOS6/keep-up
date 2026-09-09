@@ -7,15 +7,28 @@ import { Gesture } from '../models/gesture'
 })
 export class GestureDetectService {
 
+  private isVisible(landmark: NormalizedLandmark) {
+    return (landmark.visibility ?? 0) > 0.6;
+  }
+
   isLeftHandUp(landmarks: NormalizedLandmark[]) {
     const leftShoulder = landmarks[11];
     const leftWrist = landmarks[15];
+
+    if (!this.isVisible(leftShoulder) || !this.isVisible(leftWrist)) {
+      return false;
+    }
+
     return leftWrist.y < leftShoulder.y;
   }
 
   isRightHandUp(landmarks: NormalizedLandmark[]) {
     const rightShoulder = landmarks[12];
     const rightWrist = landmarks[16];
+
+    if (!this.isVisible(rightShoulder) || !this.isVisible(rightWrist)) {
+      return false;
+    }
     return rightWrist.y < rightShoulder.y;
   }
 

@@ -1,17 +1,37 @@
 <div class="game-container">
     <h1>Keep Up</h1>
 
-    @if (gameState() !== GameState.GAME_OVER) {
-        <div class="score-bar">
-            <p>Score: {{ score() }}</p>
-            <p>Lives: {{ lives() }}</p>
-            <p>Time: {{ timeRemaining().toFixed(2) }}</p>
-        </div>
+    <div class="score-bar">
+        <p>Score: <span class="score">{{ score() }}</span></p>
+        <p>Lives: <span class="lives">{{ lives() }}</span></p>
+        <p>Time: 
+            <span class="time">
+                @if (gameState() === GameState.IDLE || gameState() === GameState.GAME_OVER) {
+                    --
+                } @else {
+                    {{ timeRemaining().toFixed(2) }}
+                }
+            </span>
+        </p>
+    </div>
 
-        <div class="command-box">
+    <div class="command-box">
+        @if (gameState() === GameState.IDLE) {
+            <H2>PRESS START TO READY UP!</H2>
+        }
+
+        @if (gameState() === GameState.COUNTDOWN) {
+            <h2>Get Ready...</h2>
+        }
+
+        @if (gameState() === GameState.PLAYING) {
             <h2>{{ currentCommand() }}</h2>
-        </div>
-    }
+        }
+
+        @if (gameState() === GameState.GAME_OVER) {
+            <h2>GAME OVER</h2>
+        }
+    </div>
     
     <div class="camera-wrapper"
     [class.pop]="feedback() === 'success'"
@@ -20,7 +40,6 @@
 
         @if (gameState() === GameState.COUNTDOWN) {
         <div class="countdown">
-            <p>Get Ready!</p>
             <h2>{{ countdown() }}</h2>
         </div>
     }
@@ -39,24 +58,71 @@
 
     @if (streak() >= 3 && feedback() === 'success') {
         <div class="streak">
+            <fa-icon [icon]="faBolt"></fa-icon>
             {{ streak() }}x STREAK!
         </div>
     }
     </div>
 
+    <p class="detected">Detected: {{ detectedGesture() }}</p>
+
+    @if (gameState() === GameState.IDLE) {
+        <div class="menu-actions">
+            <button class="start-button" (click)="startGame()">Start Game</button>
+            <button class="how-to-button" (click)="showInstructions.set(true)">
+                <fa-icon [icon]="faCircleInfo"></fa-icon>
+                How to Play
+            </button>
+        </div>
+    }
+
     @if (gameState() === GameState.GAME_OVER) {
         <div class="game-over">
-            <h2>Game Over</h2>
-            <p>Score: {{ score() }}</p>
-            <button (click)="resetGame()">Play Again</button>
+            <p>SCORE: {{ score() }}</p>
+            <button class="start-button" (click)="resetGame()">Play Again</button>
         </div>
-    } @else {
-        <p class="detected">Detected: {{ detectedGesture() }}</p>
+    }
 
-        <button 
-        (click)="startGame()"
-        [disabled]="gameState() === GameState.PLAYING">
-        Start Game
-    </button>
+    @if (showInstructions()) {
+        <div class="modal-backdrop">
+            <div class="instructions-modal">
+
+                <h2>How to Play</h2>
+                <p class="instructions-intro">
+                    Match the command shown on screen before the timer runs out.
+                </p>
+                <div>
+                    <h3>Follow the Commands</h3>
+                    <p>
+                        Once the game starts, a command will appear on screen. 
+                        Perform the command in front of your camera before the timer runs out.
+                    </p>
+                </div>
+                <div>
+                    <h3>Beat the Timer</h3>
+                    <p>
+                        Complete each move before the timer runs out.
+                        As you progress, the timer will speed up.
+                    </p>
+                </div>
+                <div>
+                    <h3>3 Lives</h3>
+                    <p>
+                        Miss a command and you lose a life.
+                        Lose all 3 lives and it's game over.
+                    </p>
+                </div>
+                <div>
+                    <h3>Build a Streak</h3>
+                    <p>
+                        Complete multiple commands in a row to build your streak and earn more points.
+                        If you lose a life, your streak will reset.
+                    </p>
+                </div>
+                <button class="close-button" (click)="showInstructions.set(false)">
+                    Understood
+                </button>
+            </div>
+        </div>
     }
 </div>

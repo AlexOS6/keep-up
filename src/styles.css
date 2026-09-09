@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+body {
+    background: linear-gradient(
+        0deg,
+        rgb(95, 0, 0),
+        rgb(0, 0, 0),
+        rgb(0, 0, 95)
+    );
+
+    background-size: 100% 200%;
+    animation: background-shift 6s ease-in-out infinite alternate;
+
+    color: white;
+    min-height: 100vh;
+}
+
+@keyframes background-shift {
+    from {
+        background-position: 0% 35%;
+    }
+
+    to {
+        background-position: 0% 65%;
+    }
+}

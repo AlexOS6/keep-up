@@ -4,13 +4,19 @@ import { GestureDetectService } from '../../services/gesture-detect-service';
 import { GameService } from '../../services/game-service';
 import { Gesture } from '../../models/gesture';
 import { GameState } from '../../models/game-state';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCircleInfo, faBolt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-game',
+  imports: [FontAwesomeModule],
   templateUrl: './game-component.html',
   styleUrl: './game-component.css',
 })
 export class GameComponent implements AfterViewInit {
+  readonly faCircleInfo = faCircleInfo;
+  readonly faBolt = faBolt;
+  readonly GameState = GameState;
 
   private poseService = inject(PoseService);
   private gestureDetectService = inject(GestureDetectService);
@@ -19,20 +25,21 @@ export class GameComponent implements AfterViewInit {
   @ViewChild('video')
   video!: ElementRef<HTMLVideoElement>;
 
-   readonly GameState = GameState;
+  gameState = signal(GameState.IDLE);
 
   score = signal(0);
-  roundTime = signal(3);
-  timeRemaining = signal(3);
-  currentCommand = signal(Gesture.NONE);
-  detectedGesture = signal(Gesture.NONE);
-  countdown = signal(3);
   lives = signal(3);
   streak = signal(0);
 
-  feedback = signal< 'success' | 'failure' | null>(null);
+  currentCommand = signal(Gesture.NONE);
+  detectedGesture = signal(Gesture.NONE);
 
-  gameState = signal(GameState.IDLE);
+  roundTime = signal(3);
+  timeRemaining = signal(3);
+  countdown = signal(3);
+
+  feedback = signal<'success' | 'failure' | null>(null);
+  showInstructions = signal(false);
 
   async ngAfterViewInit() {
     const stream = await navigator.mediaDevices.getUserMedia({video: true});
@@ -82,6 +89,26 @@ export class GameComponent implements AfterViewInit {
 
     requestAnimationFrame(() => this.detectPose());
   }
+  
+  private startTimer() {
+    const startTime = performance.now();
+
+    const updateTimer = () => {
+      const elapsedTime = (performance.now() - startTime) / 1000;
+      const remainingTime = this.roundTime() - elapsedTime;
+      
+      if (remainingTime <= 0) {
+        this.timeRemaining.set(0);
+        this.evaluateRound();
+        return;
+      }
+
+      this.timeRemaining.set(remainingTime);
+      requestAnimationFrame(updateTimer);
+    };
+
+  requestAnimationFrame(updateTimer);
+  }
 
   private evaluateRound() {
     const success = this.gameService.evaluateRound(
@@ -114,26 +141,6 @@ export class GameComponent implements AfterViewInit {
     setTimeout(() => {
       this.feedback.set(null);
     }, 700);
-  }
-  
-  private startTimer() {
-    const startTime = performance.now();
-
-    const updateTimer = () => {
-      const elapsedTime = (performance.now() - startTime) / 1000;
-      const remainingTime = this.roundTime() - elapsedTime;
-      
-      if (remainingTime <= 0) {
-        this.timeRemaining.set(0);
-        this.evaluateRound();
-        return;
-      }
-
-      this.timeRemaining.set(remainingTime);
-      requestAnimationFrame(updateTimer);
-    };
-
-  requestAnimationFrame(updateTimer);
   }
 
   private startCountdown() {

@@ -11,15 +11,15 @@
 
 .game-container h1 {
     margin: 0;
-    font-size: 2.5rem;
+    font-size: 3.5rem;
     color:gold;
+    font-family: 'Bungee', sans-serif;
     -webkit-text-stroke: 1px black;
     text-shadow: 1px 1px 2px black;
 }
 
 .score-bar {
     width: 100%;
-    margin: 0;
     display: flex;
     justify-content: space-between;
     font-size: 1.5rem;
@@ -28,22 +28,43 @@
 
 .score-bar p {
     margin: 0;
+    font-family: 'Russo One', sans-serif;
+}
+
+.score {
+    color: #22d3ee;
+    -webkit-text-stroke: 0.5px black;
+    text-shadow: 1px 1px 2px black;
+}
+.lives {
+    color: #fb7185;
+    -webkit-text-stroke: 0.5px black;
+    text-shadow: 1px 1px 2px black;
+}
+.time {
+    display: inline-block;
+    width: 4.5rem;
+    color: #f8fafc;
+    font-variant-numeric: tabular-nums;
+    -webkit-text-stroke: 0.5px black;
+    text-shadow: 1px 1px 2px black;
 }
 
 .command-box {
     width: 100%;
     padding: 1rem;
-    border: 2px solid #333;
-    background-color: #8f8f8f;
-    border-radius: 8px;
-    color: orangered;
-    -webkit-text-stroke: 0.5px black;
-    text-shadow: 1px 1px 2px black;
+    background: rgba(10, 10, 15, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
 }
 
 .command-box h2 {
     margin: 0;
-    font-size: 3rem;
+    font-size: 2rem;
+    font-family: 'Russo One', sans-serif;
+    -webkit-text-stroke: 0.5px black;
+    text-shadow: 1px 1px 2px black;
 }
 
 .camera-wrapper {
@@ -99,14 +120,13 @@
     position: absolute;
     inset: 0;
     display: flex;
+    font-family: 'Bungee', sans-serif;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    transform: translateY(-10%);
+    transform: translateY(-30%);
 }
 
 .countdown h2 {
-    margin: 0;
     font-size: 5rem;
     font-weight: bold;
     color: white;
@@ -114,14 +134,6 @@
     text-shadow: 1px 1px 2px black;
 }
 
-.countdown p {
-    margin: 0;
-    font-size: 4rem;
-    font-weight: bold;
-    color: white;
-    -webkit-text-stroke: 2px black;
-    text-shadow: 1px 1px 2px black;
-}
 
 .feedback-overlay {
     position: absolute;
@@ -129,6 +141,7 @@
     bottom: 40px;
     transform: translateX(-50%);
     font-size: 2rem;
+    font-family: 'Bungee', sans-serif;
     font-weight: bold;
     -webkit-text-stroke: 1px black;
     text-shadow: 1px 1px 2px black;
@@ -168,9 +181,19 @@
     font-size: 1.75rem;
     font-weight: bold;
     color: gold;
+    font-family: 'Bungee', sans-serif;
+    -webkit-text-stroke: 1px black;
     text-shadow: 1px 1px 2px black;
     pointer-events: none;
     animation: streak-float 0.7s ease-out forwards;
+}
+
+.streak fa-icon {
+    filter:
+        drop-shadow(1px 0 0 black)
+        drop-shadow(-1px 0 0 black)
+        drop-shadow(0 1px 0 black)
+        drop-shadow(0 -1px 0 black);
 }
 
 @keyframes streak-float {
@@ -197,42 +220,117 @@
     color: #666;
 }
 
-button {
+.menu-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
     margin-top: 1rem;
+}
+
+.start-button {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     padding: 0.75rem 1.5rem;
+    font-size: 1.25rem;
+    font-family: 'Russo One', sans-serif;
+    background-color: #22c55e;
+    color: #f8fafc;
+    -webkit-text-stroke: 0.5px black;
+    text-shadow: 1px 1px 2px black;
+    font-weight: bold;
     border: none;
     border-radius: 8px;
-    font-size: 1rem;
-    font-weight: bold;
     cursor: pointer;
 }
 
-button:hover:not(:disabled) {
-    transform: translateY(-1px);
+.start-button:hover {
+    background-color: #4ade80;
 }
 
-button:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
+.how-to-button {
+    background: transparent;
+    color: #cbd5e1;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.close-button {
+    background: transparent;
+    padding: 0.75rem 1.5rem;
+    color: #cbd5e1;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+button:hover {
+    transform: translateY(-1px);
 }
 
 .game-over {
     width: 100%;
     padding: 1.5rem;
-    border: 2px solid #333;
     border-radius: 12px;
-    background-color: #8f8f8f;
-    color: red;
-    -webkit-text-stroke: 0.8px black;
-    text-shadow: 1px 1px 2px black;
-}
-
-.game-over h2 {
-    margin-top: 0;
-    font-size: 3rem;
+    background: rgba(10, 10, 15, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .game-over p {
     font-size: 2rem;
+    font-weight: bold;
+    font-family: 'Russo One', sans-serif;
+    -webkit-text-stroke: 0.8px black;
+    text-shadow: 1px 1px 2px black;
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(10, 10, 15, 0.8);
+    z-index: 1000;
+    animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.instructions-modal {
+    width: min(90%, 420px);
+    padding: 1.5rem;
+    background: #1e293b;
+    font-family: 'Russo One', sans-serif;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    text-align: center;
+    animation: modal-in 0.2s ease-out;
+}
+
+@keyframes modal-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.instructions-intro {
     font-weight: bold;
 }

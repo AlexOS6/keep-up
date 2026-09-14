@@ -1,0 +1,19 @@
+<h2 class="leaderboard-title">
+    LEADERBOARD: TOP 10
+</h2>
+
+<div>
+    @for (score of scores(); track score.id; let rank = $index) {
+        <div class="leaderboard-row">
+            <span class="leaderboard-rank">
+                {{ rank + 1 }}.
+            </span>
+            <span class="leaderboard-initials">
+                {{ score.playerInitials }}
+            </span>
+            <span class="leaderboard-score">
+                {{ score.score }}
+            </span>
+        </div>
+    }
+</div>

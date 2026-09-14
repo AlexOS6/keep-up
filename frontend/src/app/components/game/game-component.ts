@@ -5,13 +5,14 @@ import { GameService } from '../../services/game-service';
 import { Gesture } from '../../models/gesture';
 import { GameState } from '../../models/game-state';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCircleInfo, faBolt, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo, faBolt, faArrowRight, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { ScoreService } from '../../services/score-service';
 import { CreateScoreRequest } from '../../models/create-score-request';
+import { LeaderboardComponent } from '../leaderboard/leaderboard-component';
 
 @Component({
   selector: 'app-game',
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, LeaderboardComponent],
   templateUrl: './game-component.html',
   styleUrl: './game-component.css',
 })
@@ -19,6 +20,7 @@ export class GameComponent implements AfterViewInit {
   readonly faCircleInfo = faCircleInfo;
   readonly faBolt = faBolt;
   readonly faArrowRight = faArrowRight;
+  readonly faTrophy = faTrophy;
   readonly GameState = GameState;
 
   private poseService = inject(PoseService);
@@ -48,7 +50,9 @@ export class GameComponent implements AfterViewInit {
   cameraReady = signal(false);
   cameraError = signal<string | null>(null);
   feedback = signal<'success' | 'failure' | null>(null);
+
   showInstructions = signal(false);
+  showLeaderboard = signal(false);
 
   async ngAfterViewInit() {
     try {

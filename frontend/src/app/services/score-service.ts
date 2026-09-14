@@ -16,4 +16,8 @@ export class ScoreService {
   createScore(request: CreateScoreRequest): Observable<Score> {
     return this.http.post<Score>(this.apiUrl, request);
   }
+
+  getTopScores(): Observable<Score[]> {
+    return this.http.get<Score[]>(this.apiUrl);
+  }
 }

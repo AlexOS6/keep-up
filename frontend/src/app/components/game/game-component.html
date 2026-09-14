@@ -76,10 +76,18 @@
     @if (gameState() === GameState.IDLE) {
         <div class="menu-actions">
             <button class="start-button" [disabled]="!cameraReady()" (click)="startGame()">Start Game</button>
-            <button class="how-to-button" (click)="showInstructions.set(true)">
-                <fa-icon [icon]="faCircleInfo"></fa-icon>
-                How to Play
-            </button>
+
+            <div class="secondary-actions">
+                <button class="secondary-button" (click)="showInstructions.set(true)">
+                    <fa-icon [icon]="faCircleInfo"></fa-icon>
+                    How to Play
+                </button>
+
+                <button class="secondary-button" (click)="showLeaderboard.set(true)">
+                    <fa-icon [icon]="faTrophy"></fa-icon>
+                    Leaderboard
+                </button>
+            </div>
         </div>
     }
 
@@ -128,7 +136,7 @@
 
     @if (showInstructions()) {
         <div class="modal-backdrop">
-            <div class="instructions-modal">
+            <div class="modal instructions-modal">
 
                 <h2>How to Play</h2>
                 <p class="instructions-intro">
@@ -164,6 +172,17 @@
                 </div>
                 <button class="close-button" (click)="showInstructions.set(false)">
                     Understood
+                </button>
+            </div>
+        </div>
+    }
+
+    @if (showLeaderboard()) {
+        <div class="modal-backdrop">
+            <div class="modal leaderboard-modal">
+                <app-leaderboard></app-leaderboard>
+                <button class="close-button" (click)="showLeaderboard.set(false)">
+                    Close
                 </button>
             </div>
         </div>

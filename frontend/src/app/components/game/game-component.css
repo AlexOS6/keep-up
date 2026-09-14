@@ -288,6 +288,10 @@ button:hover {
 
 .game-over {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
     padding: 1rem;
     border-radius: 12px;
     background: rgba(10, 10, 15, 0.8);
@@ -300,6 +304,59 @@ button:hover {
     font-family: 'Russo One', sans-serif;
     -webkit-text-stroke: 0.8px black;
     text-shadow: 1px 1px 2px black;
+}
+
+.initials-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.initials-entry {
+    position: relative;
+}
+
+.initials-label {
+    color: white;
+    font-family: 'Russo One', sans-serif;
+    -webkit-text-stroke: 0.5px black;
+    text-shadow: 1px 1px 2px black;
+    font-size: 1rem;
+    letter-spacing: 0.08rem;
+}
+
+.initials-input {
+    width: 120px;
+    background: transparent;
+    color: white;
+    border: none;
+    border-bottom: 3px solid white;
+    outline: none;
+    text-align: center;
+    font-family: 'Russo One', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.5rem;
+}
+
+.submit-icon {
+    position: absolute;
+    left: calc(100% + 0.75rem);
+    bottom: 0;
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 1.75rem;
+    cursor: pointer;
+}
+
+.submit-icon:hover:not(:disabled) {
+    color: gold;
+}
+
+.submit-icon:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
 }
 
 .modal-backdrop {

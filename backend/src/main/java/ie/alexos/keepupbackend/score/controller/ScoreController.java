@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/scores")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ScoreController {
 
     private final ScoreService scoreService;

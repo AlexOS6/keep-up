@@ -84,11 +84,47 @@
     }
 
     @if (gameState() === GameState.GAME_OVER) {
-        <div class="game-over">
-            <p>SCORE: {{ score() }}</p>
-            <button class="start-button" (click)="resetGame()">Play Again</button>
-        </div>
-    }
+    <div class="game-over">
+        <p>SCORE: {{ score() }}</p>
+
+        @if (!scoreSubmitted()) {
+            <div class="initials-section">
+                <label
+                    class="initials-label"
+                    for="player-initials">
+                    ENTER INITIALS
+                </label>
+
+                <div class="initials-entry">
+                    <input
+                        id="player-initials"
+                        class="initials-input"
+                        type="text"
+                        minlength="2"
+                        maxlength="3"
+                        autocomplete="off"
+                        [value]="playerInitials()"
+                        (input)="playerInitials.set($any($event.target).value.toUpperCase())"
+                    />
+
+                    <button
+                        class="submit-icon"
+                        aria-label="Submit score"
+                        [disabled]="playerInitials().length < 2"
+                        (click)="submitScore()">
+                        <fa-icon [icon]="faArrowRight"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        } @else {
+            <p>SCORE SAVED</p>
+        }
+
+        <button class="start-button" (click)="resetGame()">
+            Play Again
+        </button>
+    </div>
+}
 
     @if (showInstructions()) {
         <div class="modal-backdrop">

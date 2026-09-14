@@ -5,7 +5,9 @@ import { GameService } from '../../services/game-service';
 import { Gesture } from '../../models/gesture';
 import { GameState } from '../../models/game-state';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCircleInfo, faBolt } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo, faBolt, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { ScoreService } from '../../services/score-service';
+import { CreateScoreRequest } from '../../models/create-score-request';
 
 @Component({
   selector: 'app-game',
@@ -16,11 +18,13 @@ import { faCircleInfo, faBolt } from '@fortawesome/free-solid-svg-icons';
 export class GameComponent implements AfterViewInit {
   readonly faCircleInfo = faCircleInfo;
   readonly faBolt = faBolt;
+  readonly faArrowRight = faArrowRight;
   readonly GameState = GameState;
 
   private poseService = inject(PoseService);
   private gestureDetectService = inject(GestureDetectService);
   private gameService = inject(GameService);
+  private scoreService = inject(ScoreService);
 
   @ViewChild('video')
   video!: ElementRef<HTMLVideoElement>;
@@ -30,6 +34,9 @@ export class GameComponent implements AfterViewInit {
   score = signal(0);
   lives = signal(3);
   streak = signal(0);
+
+  playerInitials = signal('');
+  scoreSubmitted = signal(false);
 
   currentCommand = signal(Gesture.NONE);
   detectedGesture = signal(Gesture.NONE);
@@ -89,6 +96,25 @@ export class GameComponent implements AfterViewInit {
     this.timeRemaining.set(3);
     this.currentCommand.set(Gesture.NONE);
     this.gameState.set(GameState.IDLE);
+    this.playerInitials.set('');
+    this.scoreSubmitted.set(false);
+  }
+
+  submitScore() {
+    const request: CreateScoreRequest = {
+      playerInitials: this.playerInitials(),
+      score: this.score()
+    };
+
+    this.scoreService.createScore(request).subscribe({
+      next: (savedScore) => {
+        console.log('Score saved:', savedScore);
+        this.scoreSubmitted.set(true);
+      },
+      error: (error) => {
+        console.error('Failed to save score:', error);
+      }
+    });
   }
 
   private detectPose() {

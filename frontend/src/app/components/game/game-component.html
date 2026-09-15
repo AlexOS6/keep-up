@@ -118,7 +118,7 @@
                     <button
                         class="submit-icon"
                         aria-label="Submit score"
-                        [disabled]="playerInitials().length < 2 || scoreSubmitting()"
+                        [disabled]="!initialsValid() || scoreSubmitting()"
                         (click)="submitScore()">
                         <fa-icon [icon]="faArrowRight"></fa-icon>
                     </button>

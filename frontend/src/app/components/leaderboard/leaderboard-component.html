@@ -20,7 +20,11 @@
     </div>
 } @else {
     @for (score of scores(); track score.id; let rank = $index) {
-        <div class="leaderboard-row">
+        <div class="leaderboard-row"
+            [class.first-place]="rank === 0"
+            [class.second-place]="rank === 1"
+            [class.third-place]="rank === 2">
+            
             <span class="leaderboard-rank">
                 {{ rank + 1 }}.
             </span>

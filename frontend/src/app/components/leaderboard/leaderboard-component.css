@@ -63,6 +63,7 @@
 }
 
 .leaderboard-row {
+    color: white;
     display: grid;
     grid-template-columns: 2.5rem 1fr 5rem;
     align-items: center;
@@ -72,19 +73,28 @@
     font-size: 1.2rem;
 }
 
+.first-place {
+    color: gold;
+}
+
+.second-place {
+    color: silver;
+}
+
+.third-place {
+    color: #cd7f32;
+}
+
 .leaderboard-rank {
     text-align: right;
-    color: #cbd5e1;
 }
 
 .leaderboard-initials {
     text-align: left;
-    color: white;
     letter-spacing: 0.15rem;
 }
 
 .leaderboard-score {
     text-align: center;
-    color: #22d3ee;
     font-variant-numeric: tabular-nums;
 }

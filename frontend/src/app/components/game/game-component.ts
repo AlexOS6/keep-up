@@ -57,6 +57,10 @@ export class GameComponent implements AfterViewInit {
   showInstructions = signal(false);
   showLeaderboard = signal(false);
 
+  initialsValid(): boolean {
+    return /^[A-Z]{2,3}$/.test(this.playerInitials());
+  }
+
   async ngAfterViewInit() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({video: true});
@@ -114,6 +118,10 @@ export class GameComponent implements AfterViewInit {
   }
 
   submitScore() {
+    if (!this.initialsValid() || this.scoreSubmitting()) {
+      return;
+    }
+
     const request: CreateScoreRequest = {
       playerInitials: this.playerInitials(),
       score: this.score()

@@ -2,7 +2,23 @@
     LEADERBOARD: TOP 10
 </h2>
 
-<div>
+@if (loading()) {
+    <div class="loading-dots" aria-label="Loading leaderboard">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+} @else if (error()) {
+    <div class="leaderboard-error">
+        <p>Unable to load leaderboard.</p>
+        <button
+            class="retry-button"
+            aria-label="Retry loading leaderboard"
+            (click)="loadScores()">
+            <fa-icon [icon]="faRotateRight"></fa-icon>   
+        </button>
+    </div>
+} @else {
     @for (score of scores(); track score.id; let rank = $index) {
         <div class="leaderboard-row">
             <span class="leaderboard-rank">
@@ -15,5 +31,7 @@
                 {{ score.score }}
             </span>
         </div>
+    } @empty {
+        <p>No scores yet.</p>
     }
-</div>
+}

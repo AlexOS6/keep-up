@@ -40,6 +40,9 @@ export class GameComponent implements AfterViewInit {
   playerInitials = signal('');
   scoreSubmitted = signal(false);
 
+  scoreSubmitError = signal(false);
+  scoreSubmitting = signal(false);
+
   currentCommand = signal(Gesture.NONE);
   detectedGesture = signal(Gesture.NONE);
 
@@ -89,6 +92,10 @@ export class GameComponent implements AfterViewInit {
     this.roundTime.set(3);
     this.timeRemaining.set(3);
     this.countdown.set(3);
+    this.scoreSubmitted.set(false);
+    this.scoreSubmitError.set(false);
+    this.scoreSubmitting.set(false);
+    this.playerInitials.set('');
     this.gameState.set(GameState.COUNTDOWN);
     this.startCountdown();
   }
@@ -102,6 +109,8 @@ export class GameComponent implements AfterViewInit {
     this.gameState.set(GameState.IDLE);
     this.playerInitials.set('');
     this.scoreSubmitted.set(false);
+    this.scoreSubmitError.set(false);
+    this.scoreSubmitting.set(false);
   }
 
   submitScore() {
@@ -110,13 +119,19 @@ export class GameComponent implements AfterViewInit {
       score: this.score()
     };
 
+    this.scoreSubmitting.set(true);
+    this.scoreSubmitError.set(false);
+
     this.scoreService.createScore(request).subscribe({
       next: (savedScore) => {
         console.log('Score saved:', savedScore);
         this.scoreSubmitted.set(true);
+        this.scoreSubmitting.set(false);
       },
       error: (error) => {
         console.error('Failed to save score:', error);
+        this.scoreSubmitError.set(true);
+        this.scoreSubmitting.set(false);
       }
     });
   }

@@ -370,6 +370,11 @@ button:hover {
     cursor: not-allowed;
 }
 
+.game-over .score-submit-error {
+    font-size: 1rem;
+    color: #fb7185;
+}
+
 .modal-backdrop {
     position: fixed;
     inset: 0;

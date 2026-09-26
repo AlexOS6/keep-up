@@ -38,6 +38,7 @@ export class GameComponent implements AfterViewInit {
   streak = signal(0);
 
   playerInitials = signal('');
+  scoreQualifies = signal<boolean | null>(null);
   scoreSubmitted = signal(false);
 
   scoreSubmitError = signal(false);
@@ -96,10 +97,13 @@ export class GameComponent implements AfterViewInit {
     this.roundTime.set(3);
     this.timeRemaining.set(3);
     this.countdown.set(3);
+
     this.scoreSubmitted.set(false);
     this.scoreSubmitError.set(false);
     this.scoreSubmitting.set(false);
+    this.scoreQualifies.set(null);
     this.playerInitials.set('');
+
     this.gameState.set(GameState.COUNTDOWN);
     this.startCountdown();
   }
@@ -110,11 +114,14 @@ export class GameComponent implements AfterViewInit {
     this.roundTime.set(3);
     this.timeRemaining.set(3);
     this.currentCommand.set(Gesture.NONE);
-    this.gameState.set(GameState.IDLE);
+
     this.playerInitials.set('');
     this.scoreSubmitted.set(false);
     this.scoreSubmitError.set(false);
     this.scoreSubmitting.set(false);
+    this.scoreQualifies.set(null);
+
+    this.gameState.set(GameState.IDLE);
   }
 
   submitScore() {
@@ -196,6 +203,7 @@ export class GameComponent implements AfterViewInit {
       this.lives.update(lives => lives - 1);
       if (this.lives() === 0) { 
         this.gameState.set(GameState.GAME_OVER);
+        this.checkScoreQualification();
         return;
       }
     }
@@ -220,5 +228,19 @@ export class GameComponent implements AfterViewInit {
         this.startTimer();
       }
     }, 1000);
+  }
+
+  private checkScoreQualification() {
+    this.scoreQualifies.set(null);
+
+    this.scoreService.qualifiesForTop10(this.score()).subscribe({
+      next: (qualifies) => {
+        this.scoreQualifies.set(qualifies);
+      },
+      error: (error) => {
+        console.error('Failed to check score qualification:', error);
+        this.scoreQualifies.set(false);
+      }
+    })
   }
 }

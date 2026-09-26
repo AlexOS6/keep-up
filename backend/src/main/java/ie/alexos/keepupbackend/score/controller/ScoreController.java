@@ -31,4 +31,9 @@ public class ScoreController {
         List<Score> scores = scoreService.getTopScores();
         return ResponseEntity.ok(scores);
     }
+
+    @GetMapping("/qualifies")
+    public ResponseEntity<Boolean> qualifiesForTop10(@RequestParam int score) {
+        return ResponseEntity.ok(scoreService.qualifiesForTop10(score));
+    }
 }

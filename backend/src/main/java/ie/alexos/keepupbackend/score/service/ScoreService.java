@@ -1,5 +1,6 @@
 package ie.alexos.keepupbackend.score.service;
 
+import ie.alexos.keepupbackend.exception.ScoreDoesNotQualifyException;
 import ie.alexos.keepupbackend.score.dto.CreateScoreRequest;
 import ie.alexos.keepupbackend.score.model.Score;
 import ie.alexos.keepupbackend.score.repository.ScoreRepository;
@@ -17,6 +18,11 @@ public class ScoreService {
     }
 
     public Score createScore(CreateScoreRequest request) {
+
+        if (!qualifiesForTop10(request.score())) {
+            throw new ScoreDoesNotQualifyException();
+        }
+
         Score score = new Score();
         score.setPlayerInitials(request.playerInitials());
         score.setScore(request.score());
@@ -25,5 +31,16 @@ public class ScoreService {
 
     public List<Score> getTopScores() {
         return scoreRepository.findTop10ByOrderByScoreDesc();
+    }
+
+    public boolean qualifiesForTop10(int score) {
+        List<Score> topScores = scoreRepository.findTop10ByOrderByScoreDesc();
+
+        if (topScores.size() < 10) {
+            return true;
+        }
+
+        Score lowestTopScore = topScores.getLast();
+        return score > lowestTopScore.getScore();
     }
 }

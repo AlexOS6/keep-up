@@ -1,5 +1,6 @@
 package ie.alexos.keepupbackend.score.controller;
 
+import ie.alexos.keepupbackend.exception.ScoreDoesNotQualifyException;
 import ie.alexos.keepupbackend.score.dto.CreateScoreRequest;
 import ie.alexos.keepupbackend.score.model.Score;
 import ie.alexos.keepupbackend.score.service.ScoreService;
@@ -16,8 +17,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ScoreController.class)
 public class ScoreControllerTest {
@@ -98,5 +98,52 @@ public class ScoreControllerTest {
                 .andExpect(jsonPath("$[0].score").value(1000))
                 .andExpect(jsonPath("$[1].playerInitials").value("BOR"))
                 .andExpect(jsonPath("$[1].score").value(800));
+    }
+
+    @Test
+    void givenQualifyingScore_whenCheckQualification_thenReturnTrue() throws Exception {
+        when(scoreService.qualifiesForTop10(1200)).thenReturn(true);
+
+        mockMvc.perform(get("/scores/qualifies")
+                        .param("score", "1200"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+    }
+
+    @Test
+    void givenQualifyingScore_whenCheckQualification_thenReturnFalse() throws Exception {
+        when(scoreService.qualifiesForTop10(500)).thenReturn(false);
+
+        mockMvc.perform(get("/scores/qualifies")
+                        .param("score", "500"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("false"));
+    }
+
+    @Test
+    void givenMissingScore_whenCheckQualification_thenReturnBadRequest() throws Exception {
+        mockMvc.perform(get("/scores/qualifies"))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(scoreService);
+    }
+
+    @Test
+    void givenNonQualifyingScore_whenCreateScore_thenReturnConflict() throws Exception {
+        when(scoreService.createScore(any(CreateScoreRequest.class)))
+                .thenThrow(new ScoreDoesNotQualifyException());
+
+        mockMvc.perform(post("/scores")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                                "playerInitials": "AOS",
+                                "score": 500
+                            }
+                            """))
+                .andExpect(status().isConflict())
+                .andExpect(content().string(
+                        "Score does not qualify for the Top 10 leaderboard"
+                ));
     }
 }

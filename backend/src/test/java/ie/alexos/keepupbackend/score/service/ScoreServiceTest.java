@@ -1,5 +1,6 @@
 package ie.alexos.keepupbackend.score.service;
 
+import ie.alexos.keepupbackend.exception.ScoreDoesNotQualifyException;
 import ie.alexos.keepupbackend.score.dto.CreateScoreRequest;
 import ie.alexos.keepupbackend.score.model.Score;
 import ie.alexos.keepupbackend.score.repository.ScoreRepository;
@@ -10,8 +11,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -60,5 +63,20 @@ public class ScoreServiceTest {
         assertEquals(2250, result.getLast().getScore());
 
         verify(scoreRepository).findTop10ByOrderByScoreDesc();
+    }
+
+    @Test
+    void givenScoreDoesNotQualify_whenCreateScore_thenThrowException() {
+        CreateScoreRequest request = new CreateScoreRequest("AOS", 900);
+
+        List<Score> topScores = IntStream.range(0, 10).mapToObj(i -> {
+            Score score = new Score();
+            score.setScore(1900 - (i * 100));
+            return score;
+        }).toList();
+
+        when(scoreRepository.findTop10ByOrderByScoreDesc()).thenReturn(topScores);
+
+        assertThrows(ScoreDoesNotQualifyException.class, () -> scoreService.createScore(request));
     }
 }

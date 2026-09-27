@@ -92,57 +92,20 @@
     }
 
     @if (gameState() === GameState.GAME_OVER) {
-        <div class="game-over">
-            <p>SCORE: {{ score() }}</p>
+    <app-game-over
+        [score]="score()"
+        [scoreQualifies]="scoreQualifies()"
+        [playerInitials]="playerInitials()"
+        [scoreSubmitted]="scoreSubmitted()"
+        [scoreSubmitting]="scoreSubmitting()"
+        [scoreSubmitError]="scoreSubmitError()"
+        [initialsValid]="initialsValid()"
 
-            @if (scoreQualifies() === null) {
-                <p>Checking leaderboard...</p>
-            } @else if (scoreQualifies()) {
-                @if (!scoreSubmitted()) {
-                    <div class="initials-section">
-                        <p>HIGH SCORE!</p>
-
-                        <label class="initials-label" for="player-initials">
-                            ENTER INITIALS
-                        </label>
-
-                        <div class="initials-entry">
-                            <input
-                                id="player-initials"
-                                class="initials-input"
-                                type="text"
-                                minlength="2"
-                                maxlength="3"
-                                autocomplete="off"
-                                [value]="playerInitials()"
-                                (input)="playerInitials.set($any($event.target).value.toUpperCase())"
-                            />
-
-                            <button
-                                class="submit-icon"
-                                aria-label="Submit Score"
-                                [disabled]="!initialsValid() || scoreSubmitting()"
-                                (click)="submitScore()">
-                                <fa-icon [icon]="faArrowRight"></fa-icon>
-                            </button>
-                        </div>
-
-                        @if (scoreSubmitError()) {
-                            <p class="score-submit-error">
-                                Unable to save score. Try again.
-                            </p>
-                        }
-                    </div>
-                } @else {
-                    <p>SCORE SAVED</p>
-                }
-            }
-
-            <button class="start-button" (click)="resetGame()">
-                Play Again
-            </button>
-        </div>
-    }
+        (initialsChanged)="playerInitials.set($event)"
+        (submit)="submitScore()"
+        (playAgain)="resetGame()">
+    </app-game-over>
+}
 
     @if (showInstructions()) {
         <div class="modal-backdrop">

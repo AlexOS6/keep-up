@@ -1,0 +1,144 @@
+.game-over-backdrop {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+
+    animation: fadeIn 0.3s ease-out;
+}
+
+.game-over {
+    width: min(90%, 500px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem;
+    border-radius: 12px;
+    background: rgba(10, 10, 15, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    animation: gameOverAppear 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes gameOverAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    80% {
+        transform: scale(1.03);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.game-over p {
+    margin: 0.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: 'Russo One', sans-serif;
+    -webkit-text-stroke: 0.8px black;
+    text-shadow: 1px 1px 2px black;
+}
+
+.initials-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.initials-entry {
+    position: relative;
+}
+
+.initials-label {
+    color: white;
+    font-family: 'Russo One', sans-serif;
+    -webkit-text-stroke: 0.5px black;
+    text-shadow: 1px 1px 2px black;
+    font-size: 1rem;
+    letter-spacing: 0.08rem;
+}
+
+.initials-input {
+    width: 120px;
+    background: transparent;
+    color: white;
+    border: none;
+    border-bottom: 3px solid white;
+    outline: none;
+    text-align: center;
+    font-family: 'Russo One', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.5rem;
+}
+
+.submit-icon {
+    position: absolute;
+    left: calc(100% + 0.75rem);
+    bottom: 0;
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 1.75rem;
+    cursor: pointer;
+}
+
+.submit-icon:hover:not(:disabled) {
+    color: gold;
+}
+
+.submit-icon:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.game-over .score-submit-error {
+    font-size: 1rem;
+    color: #fb7185;
+}
+
+.start-button {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.25rem;
+    font-family: 'Russo One', sans-serif;
+    background-color: #22c55e;
+    color: #f8fafc;
+    -webkit-text-stroke: 0.5px black;
+    text-shadow: 1px 1px 2px black;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.start-button:hover {
+    background-color: #4ade80;
+    transform: translateY(-1px);
+}
+
+.start-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}

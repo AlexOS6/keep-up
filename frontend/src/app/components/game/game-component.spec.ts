@@ -102,41 +102,6 @@ describe('Game', () => {
     expect(component.scoreSubmitting()).toBe(false);
     expect(component.scoreSubmitError()).toBe(false);
   });
-
-  it('should show initials entry when score qualifies', () => {
-    component.gameState.set(GameState.GAME_OVER);
-    component.scoreQualifies.set(true);
-
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-
-    expect(compiled.textContent).toContain('HIGH SCORE!');
-    expect(compiled.querySelector('#player-initials')).toBeTruthy();
-  });
-
-  it('should not show initials entry when score does not qualify', () => {
-    component.gameState.set(GameState.GAME_OVER);
-    component.scoreQualifies.set(false);
-
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-
-    expect(compiled.textContent).not.toContain('HIGH SCORE!');
-    expect(compiled.querySelector('#player-initials')).toBeNull();
-  });
-  
-  it('should show checking message while score qualification is pending', () => {
-    component.gameState.set(GameState.GAME_OVER);
-    component.scoreQualifies.set(null);
-
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-
-    expect(compiled.textContent).toContain('Checking leaderboard...');
-  });
   
   it('should handle an error when submitting a score', () => {
     component.playerInitials.set('AOS');
@@ -169,5 +134,5 @@ describe('Game', () => {
     component.submitScore();
 
     expect(mockScoreService.createScore).not.toHaveBeenCalled();
-  })
+  });
 });

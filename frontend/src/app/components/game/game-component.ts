@@ -9,10 +9,11 @@ import { faCircleInfo, faBolt, faArrowRight, faTrophy } from '@fortawesome/free-
 import { ScoreService } from '../../services/score-service';
 import { CreateScoreRequest } from '../../models/create-score-request';
 import { LeaderboardComponent } from '../leaderboard/leaderboard-component';
+import { GameOverComponent } from '../game-over/game-over-component';
 
 @Component({
   selector: 'app-game',
-  imports: [FontAwesomeModule, LeaderboardComponent],
+  imports: [FontAwesomeModule, LeaderboardComponent, GameOverComponent],
   templateUrl: './game-component.html',
   styleUrl: './game-component.css',
 })

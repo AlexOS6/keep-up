@@ -3,4 +3,10 @@ video {
     width: 100%;
     height: auto;
     transform: scaleX(-1);
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+video.camera-hidden {
+    opacity: 0;
 }

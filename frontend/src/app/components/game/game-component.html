@@ -41,6 +41,17 @@
             (cameraReady)="cameraReady.set($event)"
             (cameraError)="cameraError.set($event)">
         </app-game-camera>
+
+        @if (!cameraReady() && !cameraError()) {
+            <div class="camera-loading">
+                <div class="loading-dots" aria-label="Starting camera">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <p>LOADING</p>
+            </div>
+        }
     
         @if (gameState() === GameState.COUNTDOWN) {
             <div class="countdown">

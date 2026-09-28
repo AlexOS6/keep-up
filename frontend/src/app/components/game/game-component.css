@@ -76,6 +76,21 @@
     background: #111;
 }
 
+.camera-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.camera-loading p {
+    font-family: 'Bungee', sans-serif;
+    -webkit-text-stroke: 2px black;
+    text-shadow: 1px 1px 2px black;
+}
+
 .pop {
     animation: pop 0.2s ease-out;
 }

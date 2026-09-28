@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, inject, output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, output, signal, ViewChild } from '@angular/core';
 
 import { PoseService } from '../../services/pose-service';
 import { GestureDetectService } from '../../services/gesture-detect-service';
@@ -21,6 +21,8 @@ export class GameCameraComponent implements AfterViewInit {
   cameraReady = output<boolean>();
   cameraError = output<string>();
 
+  cameraLoaded = signal(false);
+
   async ngAfterViewInit() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -39,6 +41,7 @@ export class GameCameraComponent implements AfterViewInit {
       await videoElement.play();
       await this.poseService.loadMediaPipe();
 
+      this.cameraLoaded.set(true);
       this.cameraReady.emit(true);
 
       this.detectPose();

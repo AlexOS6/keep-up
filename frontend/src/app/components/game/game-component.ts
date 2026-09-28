@@ -33,6 +33,7 @@ export class GameComponent {
 
   playerInitials = signal('');
   scoreQualifies = signal<boolean | null>(null);
+  scoreQualificationError = signal(false);
   scoreSubmitted = signal(false);
 
   scoreSubmitError = signal(false);
@@ -68,6 +69,7 @@ export class GameComponent {
     this.scoreSubmitError.set(false);
     this.scoreSubmitting.set(false);
     this.scoreQualifies.set(null);
+    this.scoreQualificationError.set(false);
     this.playerInitials.set('');
 
     this.gameState.set(GameState.COUNTDOWN);
@@ -86,6 +88,7 @@ export class GameComponent {
     this.scoreSubmitError.set(false);
     this.scoreSubmitting.set(false);
     this.scoreQualifies.set(null);
+    this.scoreQualificationError.set(false);
 
     this.gameState.set(GameState.IDLE);
   }
@@ -186,6 +189,7 @@ export class GameComponent {
 
   private checkScoreQualification() {
     this.scoreQualifies.set(null);
+    this.scoreQualificationError.set(false);
 
     this.scoreService.qualifiesForTop10(this.score()).subscribe({
       next: (qualifies) => {
@@ -193,7 +197,7 @@ export class GameComponent {
       },
       error: (error) => {
         console.error('Failed to check score qualification:', error);
-        this.scoreQualifies.set(false);
+        this.scoreQualificationError.set(true);
       }
     })
   }

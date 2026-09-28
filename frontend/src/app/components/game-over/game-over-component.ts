@@ -9,8 +9,11 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
   styleUrl: './game-over-component.css',
 })
 export class GameOverComponent {
+  readonly faArrowRight = faArrowRight;
+
   score = input.required<number>();
   scoreQualifies = input.required<boolean | null>();
+  scoreQualificationError = input.required<boolean>();
 
   playerInitials = input.required<string>();
   scoreSubmitted = input.required<boolean>();
@@ -21,6 +24,4 @@ export class GameOverComponent {
   initialsChanged = output<string>();
   submit = output<void>();
   playAgain = output<void>();
-
-  readonly faArrowRight = faArrowRight;
 }

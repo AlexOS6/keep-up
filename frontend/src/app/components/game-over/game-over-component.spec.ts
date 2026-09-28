@@ -16,6 +16,7 @@ describe('GameOverComponent', () => {
 
     fixture.componentRef.setInput('score', 700);
     fixture.componentRef.setInput('scoreQualifies', false);
+    fixture.componentRef.setInput('scoreQualificationError', false);
     fixture.componentRef.setInput('playerInitials', '');
     fixture.componentRef.setInput('scoreSubmitted', false);
     fixture.componentRef.setInput('scoreSubmitting', false);
@@ -58,5 +59,15 @@ describe('GameOverComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
   
     expect(compiled.textContent).toContain('Checking leaderboard...');
+  });
+
+  it('should show an error when score qualification fails', () => {
+    fixture.componentRef.setInput('scoreQualificationError', true);
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.textContent).toContain('Leaderboard unavailable');
   });
 });

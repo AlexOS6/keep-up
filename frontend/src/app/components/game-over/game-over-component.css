@@ -112,7 +112,7 @@
     cursor: not-allowed;
 }
 
-.game-over .score-submit-error {
+.game-over .score-error {
     font-size: 1rem;
     color: #fb7185;
 }

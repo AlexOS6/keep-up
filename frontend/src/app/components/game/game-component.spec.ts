@@ -3,10 +3,7 @@ import { of, throwError } from 'rxjs';
 
 import { GameComponent } from './game-component';
 import { ScoreService } from '../../services/score-service';
-import { PoseService } from '../../services/pose-service';
-import { GestureDetectService } from '../../services/gesture-detect-service';
 import { GameService } from '../../services/game-service';
-import { GameState } from '../../models/game-state';
 
 describe('Game', () => {
   let component: GameComponent;
@@ -14,15 +11,6 @@ describe('Game', () => {
 
   const mockScoreService = {
     createScore: vi.fn()
-  };
-
-  const mockPoseService = {
-    loadMediaPipe: vi.fn(),
-    detect: vi.fn()
-  };
-
-  const mockGestureDetectService = {
-    detectGesture: vi.fn()
   };
 
   const mockGameService = {
@@ -39,14 +27,6 @@ describe('Game', () => {
         {
           provide: ScoreService,
           useValue: mockScoreService
-        },
-        {
-          provide: PoseService,
-          useValue: mockPoseService
-        },
-        {
-          provide: GestureDetectService,
-          useValue: mockGestureDetectService
         },
         {
           provide: GameService,

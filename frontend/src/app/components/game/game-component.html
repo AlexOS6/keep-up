@@ -32,64 +32,69 @@
         }
     </div>
     
-    <div class="camera-wrapper"
-    [class.pop]="feedback() === 'success'"
-    [class.shake]="feedback() === 'failure'">
-        <video #video playsinline></video>
-
+    <div 
+        class="camera-wrapper"
+        [class.pop]="feedback() === 'success'"
+        [class.shake]="feedback() === 'failure'">
+        <app-game-camera
+            (gestureDetected)="detectedGesture.set($event)"
+            (cameraReady)="cameraReady.set($event)"
+            (cameraError)="cameraError.set($event)">
+        </app-game-camera>
+    
         @if (gameState() === GameState.COUNTDOWN) {
-        <div class="countdown">
-            <h2>{{ countdown() }}</h2>
-        </div>
-    }
-
-    @if (feedback() === 'success') {
-        <div class="feedback-overlay success">
-            <h2>✓ CORRECT!</h2>
-        </div>
-    }
-
-    @if (feedback() === 'failure') {
-        <div class="feedback-overlay failure">
-            <h2>✗ MISS!</h2>
-        </div>
-    }
-
-    @if (streak() >= 3 && feedback() === 'success') {
-        <div class="streak">
-            <fa-icon [icon]="faBolt"></fa-icon>
-            {{ streak() }}x STREAK!
-        </div>
-    }
-    </div>
-
-    @if (cameraError()) {
-        <p class="camera-error">
-            {{ cameraError() }}
-        </p>
-    } @else {
-        <p class="detected">
-            Detected: {{ detectedGesture() }}
-        </p>
-    }
-
-    @if (gameState() === GameState.IDLE) {
-        <div class="menu-actions">
-            <button class="start-button" [disabled]="!cameraReady()" (click)="startGame()">Start Game</button>
-
-            <div class="secondary-actions">
-                <button class="secondary-button" (click)="showInstructions.set(true)">
-                    <fa-icon [icon]="faCircleInfo"></fa-icon>
-                    How to Play
-                </button>
-
-                <button class="secondary-button" (click)="showLeaderboard.set(true)">
-                    <fa-icon [icon]="faTrophy"></fa-icon>
-                    Leaderboard
-                </button>
+            <div class="countdown">
+                <h2>{{ countdown() }}</h2>
             </div>
+        }
+
+        @if (feedback() === 'success') {
+            <div class="feedback-overlay success">
+                <h2>✓ CORRECT!</h2>
+            </div>
+        }
+
+        @if (feedback() === 'failure') {
+            <div class="feedback-overlay failure">
+                <h2>✗ MISS!</h2>
+            </div>
+        }
+
+        @if (streak() >= 3 && feedback() === 'success') {
+            <div class="streak">
+                <fa-icon [icon]="faBolt"></fa-icon>
+                {{ streak() }}x STREAK!
+            </div>
+        }
         </div>
-    }
+
+        @if (cameraError()) {
+            <p class="camera-error">
+                {{ cameraError() }}
+            </p>
+        } @else {
+            <p class="detected">
+                Detected: {{ detectedGesture() }}
+            </p>
+        }
+
+        @if (gameState() === GameState.IDLE) {
+            <div class="menu-actions">
+                <button class="start-button" [disabled]="!cameraReady()" (click)="startGame()">Start Game</button>
+                
+                <div class="secondary-actions">
+                    <button class="secondary-button" (click)="showInstructions.set(true)">
+                        <fa-icon [icon]="faCircleInfo"></fa-icon>
+                        How to Play
+                    </button>
+
+                    <button class="secondary-button" (click)="showLeaderboard.set(true)">
+                        <fa-icon [icon]="faTrophy"></fa-icon>
+                        Leaderboard
+                    </button>
+                </div>
+            </div>
+        }
 
     @if (gameState() === GameState.GAME_OVER) {
     <app-game-over

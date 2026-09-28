@@ -22,5 +22,5 @@ export class GameOverComponent {
   submit = output<void>();
   playAgain = output<void>();
 
-  faArrowRight = faArrowRight;
+  readonly faArrowRight = faArrowRight;
 }

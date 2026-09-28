@@ -1,36 +1,29 @@
-import { AfterViewInit, Component, ElementRef, inject, signal, ViewChild } from '@angular/core';
-import { PoseService } from '../../services/pose-service';
-import { GestureDetectService } from '../../services/gesture-detect-service';
+import { Component, inject, signal } from '@angular/core';
 import { GameService } from '../../services/game-service';
 import { Gesture } from '../../models/gesture';
 import { GameState } from '../../models/game-state';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCircleInfo, faBolt, faArrowRight, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo, faBolt, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { ScoreService } from '../../services/score-service';
 import { CreateScoreRequest } from '../../models/create-score-request';
 import { LeaderboardComponent } from '../leaderboard/leaderboard-component';
 import { GameOverComponent } from '../game-over/game-over-component';
+import { GameCameraComponent } from '../game-camera/game-camera-component';
 
 @Component({
   selector: 'app-game',
-  imports: [FontAwesomeModule, LeaderboardComponent, GameOverComponent],
+  imports: [FontAwesomeModule, LeaderboardComponent, GameOverComponent, GameCameraComponent],
   templateUrl: './game-component.html',
   styleUrl: './game-component.css',
 })
-export class GameComponent implements AfterViewInit {
+export class GameComponent {
   readonly faCircleInfo = faCircleInfo;
   readonly faBolt = faBolt;
-  readonly faArrowRight = faArrowRight;
   readonly faTrophy = faTrophy;
   readonly GameState = GameState;
 
-  private poseService = inject(PoseService);
-  private gestureDetectService = inject(GestureDetectService);
   private gameService = inject(GameService);
   private scoreService = inject(ScoreService);
-
-  @ViewChild('video')
-  video!: ElementRef<HTMLVideoElement>;
 
   gameState = signal(GameState.IDLE);
 
@@ -61,34 +54,6 @@ export class GameComponent implements AfterViewInit {
 
   initialsValid(): boolean {
     return /^[A-Z]{2,3}$/.test(this.playerInitials());
-  }
-
-  async ngAfterViewInit() {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({video: true});
-
-      const videoElement = this.video.nativeElement;
-      videoElement.srcObject = stream;
-      
-      await new Promise<void>((resolve) => {
-        videoElement.onloadedmetadata = () => {
-          resolve();
-        }
-      });
-      
-      await videoElement.play();
-      await this.poseService.loadMediaPipe();
-      this.cameraReady.set(true);
-      this.detectPose();
-    } catch (err) {
-      console.error('Camera setup unsuccessful:', err);
-
-      this.cameraReady.set(false);
-      this.cameraError.set(
-        `Camera access is required to play.
-        Please allow camera access and reload the page.`
-      );
-    }
   }
 
   startGame() {
@@ -150,18 +115,6 @@ export class GameComponent implements AfterViewInit {
         this.scoreSubmitting.set(false);
       }
     });
-  }
-
-  private detectPose() {
-    const videoElement = this.video.nativeElement;
-    const result = this.poseService.detect(videoElement);
-    const landmarks = result?.landmarks[0];
-
-    if (landmarks) {
-      this.detectedGesture.set(this.gestureDetectService.detectGesture(landmarks));
-    }
-
-    requestAnimationFrame(() => this.detectPose());
   }
   
   private startTimer() {

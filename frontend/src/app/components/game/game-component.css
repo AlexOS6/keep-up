@@ -76,13 +76,6 @@
     background: #111;
 }
 
-.camera-wrapper video {
-    display: block;
-    width: 100%;
-    height: auto;
-    transform: scaleX(-1);
-}
-
 .pop {
     animation: pop 0.2s ease-out;
 }

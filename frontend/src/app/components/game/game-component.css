@@ -397,6 +397,8 @@ button:hover {
 
 .modal {
     width: min(90%, 420px);
+    max-height: 90vh;
+    overflow-y: auto;
     padding: 1.5rem;
     background: #1e293b;
     color: white;

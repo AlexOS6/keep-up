@@ -50,7 +50,7 @@ export class GameCameraComponent implements AfterViewInit {
       this.cameraReady.emit(false);
       this.cameraError.emit(
         `Camera access is required to play.
-        Please allow camera access and reload the page.`
+        Allow camera access in browser settings and reload.`
       );
     }
   }

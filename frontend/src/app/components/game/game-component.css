@@ -434,6 +434,30 @@ button:hover {
     font-weight: bold;
 }
 
+.gesture-list {
+    margin: 1rem auto;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+}
+
+.gesture-list li {
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.gesture-list li:last-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 0.25rem);
+    box-sizing: border-box;
+}
+
 .leaderboard-modal {
     width: min(90%, 460px);
 }

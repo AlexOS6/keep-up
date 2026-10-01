@@ -9,6 +9,7 @@ import { CreateScoreRequest } from '../../models/create-score-request';
 import { LeaderboardComponent } from '../leaderboard/leaderboard-component';
 import { GameOverComponent } from '../game-over/game-over-component';
 import { GameCameraComponent } from '../game-camera/game-camera-component';
+import { SoundService } from '../../services/sound-service';
 
 @Component({
   selector: 'app-game',
@@ -24,6 +25,7 @@ export class GameComponent {
 
   private gameService = inject(GameService);
   private scoreService = inject(ScoreService);
+  private soundService = inject(SoundService);
 
   gameState = signal(GameState.IDLE);
 
@@ -148,6 +150,7 @@ export class GameComponent {
 
     if (success) {
       this.feedback.set('success');
+      this.soundService.playSuccess();
       this.streak.update(streak => streak + 1);
 
       const points = Math.min(this.streak() * 10, 100);
@@ -158,11 +161,14 @@ export class GameComponent {
       this.feedback.set('failure');
       this.streak.set(0);
       this.lives.update(lives => lives - 1);
+
       if (this.lives() === 0) { 
         this.gameState.set(GameState.GAME_OVER);
         this.checkScoreQualification();
         return;
       }
+
+      this.soundService.playFailure();
     }
 
     this.currentCommand.set(this.gameService.getRandomCommand(this.currentCommand()));
@@ -175,15 +181,20 @@ export class GameComponent {
   }
 
   private startCountdown() {
+    this.soundService.playCountdown();
     const countdownTimer = setInterval(() => {
       this.countdown.update(count => count - 1);
 
       if (this.countdown() <= 0) {
         clearInterval(countdownTimer);
+        this.soundService.playGo();
         this.gameState.set(GameState.PLAYING);
         this.currentCommand.set(this.gameService.getRandomCommand(this.currentCommand()));
         this.startTimer();
+        return;
       }
+
+      this.soundService.playCountdown();
     }, 1000);
   }
 
@@ -194,10 +205,17 @@ export class GameComponent {
     this.scoreService.qualifiesForTop10(this.score()).subscribe({
       next: (qualifies) => {
         this.scoreQualifies.set(qualifies);
+
+        if (qualifies) {
+          this.soundService.playHighScore();
+        } else {
+          this.soundService.playFailure();
+        }
       },
       error: (error) => {
         console.error('Failed to check score qualification:', error);
         this.scoreQualificationError.set(true);
+        this.soundService.playFailure();
       }
     })
   }

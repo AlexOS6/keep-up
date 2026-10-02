@@ -12,7 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/scores")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {
+        "http://localhost:4200",
+        "https://keep-up-one.vercel.app"
+})
 public class ScoreController {
 
     private final ScoreService scoreService;

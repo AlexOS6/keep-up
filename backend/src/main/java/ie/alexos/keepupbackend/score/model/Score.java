@@ -20,5 +20,4 @@ public class Score {
 
     @Column(nullable = false)
     private int score;
-
 }

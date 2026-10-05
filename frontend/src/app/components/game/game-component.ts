@@ -60,30 +60,20 @@ export class GameComponent {
   }
 
   startGame() {
-    this.score.set(0);
-    this.streak.set(0);
-    this.lives.set(3);
-    this.roundTime.set(3);
-    this.timeRemaining.set(3);
     this.countdown.set(3);
-
-    this.scoreSubmitted.set(false);
-    this.scoreSubmitError.set(false);
-    this.scoreSubmitting.set(false);
-    this.scoreQualifies.set(null);
-    this.scoreQualificationError.set(false);
-    this.playerInitials.set('');
-
     this.gameState.set(GameState.COUNTDOWN);
     this.startCountdown();
   }
 
   resetGame() {
     this.score.set(0);
+    this.streak.set(0);
     this.lives.set(3);
+
     this.roundTime.set(3);
     this.timeRemaining.set(3);
     this.currentCommand.set(Gesture.NONE);
+    this.feedback.set(null);
 
     this.playerInitials.set('');
     this.scoreSubmitted.set(false);

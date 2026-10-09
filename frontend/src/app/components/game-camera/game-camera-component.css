@@ -1,7 +1,8 @@
 video {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
     transform: scaleX(-1);
     opacity: 1;
     transition: opacity 0.3s ease;
